@@ -37,6 +37,8 @@ func main() {
         {
             user.POST("/", uc.CreateAuth)
             user.GET("/:id", uc.GetAuth)
+            user.PUT("/:id/:datePreference", uc.UpdateDatePrefrenceAuth)
+            user.POST("/login", uc.LoginAuth)
         }
     }
     if os.Getenv("CST_USER_DEV") == "true" {
@@ -46,6 +48,8 @@ func main() {
             {
                 user.POST("/", uc.Create)
                 user.GET("/:id", uc.Get)
+                user.PUT("/:id/:datePrefrence", uc.UpdateDatePrefrence)
+                user.POST("/login", uc.Login)
             }
         }
     }

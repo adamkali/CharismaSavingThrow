@@ -36,12 +36,6 @@ func (u *UserService) Create(userRequest *models.UserRequest) (*models.User, err
     if err != nil {
         return nil, err
     }
-    //construct the request
-    //	headers := map[string]interface{}{
-	//	"Signature":      hmacSignature,
-	//	"Timestamp":      timestamp,
-	//	"Content-Type":   "application/json",
-	//}
 
     var dr cstcommonlib.DetailedResponse
     err = requests.
@@ -73,12 +67,6 @@ func (u *UserService) Get(id string) (*models.User, error) {
     if err != nil {
         return nil, err
     }
-    //construct the request
-    //	headers := map[string]interface{}{
-    //	"Signature":      hmacSignature,
-    //	"Timestamp":      timestamp,
-    //	"Content-Type":   "application/json",
-    //}
 
     var dr cstcommonlib.DetailedResponse
     err = requests.
@@ -101,3 +89,72 @@ func (u *UserService) Get(id string) (*models.User, error) {
     return user, nil
 }
 
+// Login will login a user in the user service and return
+// the user object
+//
+// Args:
+//  userLoginRequest: the user login request object UserLoginRequest
+func (u *UserService) Login(userLoginRequest *models.UserLoginRequest) (*models.User, error) {
+    endpoint := u.endpoint + "/api/auth/user/login"
+    HmacAuthHeader, err := cstcommonlib.ConstructHmacAuthHeader(endpoint, "POST")
+    if err != nil {
+        return nil, err
+    }
+
+    var dr cstcommonlib.DetailedResponse
+    err = requests.
+        URL(endpoint).
+        Header("Signature", HmacAuthHeader["Signature"]).
+        Header("Timestamp", HmacAuthHeader["Timestamp"]).
+        Header("Content-Type", HmacAuthHeader["Content-Type"]).
+        BodyJSON(userLoginRequest).
+        ToJSON(dr).
+        Fetch(context.Background())
+    if err != nil {
+        return nil, err
+    }
+    // check if the request was successful
+    if !dr.Success {
+        return nil, fmt.Errorf(dr.Message)
+    }
+    // get the user object from the response 
+    user := &models.User{}
+    user = dr.Data.(*models.User)
+    return user, nil
+}
+
+// UpdateDatePrefrence will update the date prefrence of a user 
+// in the user service and return the user object
+//
+// Args:
+//  id: the id of the user to update
+//  datePrefrence: the date prefrence to update the user with
+func (u *UserService) UpdateDatePrefrence(id string, datePrefrence string) (*models.User, error) {
+    endpoint := u.endpoint + "/api/auth/user/" + id + datePrefrence
+    HmacAuthHeader, err := cstcommonlib.ConstructHmacAuthHeader(endpoint, "PUT")
+    if err != nil {
+        return nil, err
+    }
+
+    var dr cstcommonlib.DetailedResponse
+    err = requests.
+        URL(endpoint).
+        Header("Signature", HmacAuthHeader["Signature"]).
+        Header("Timestamp", HmacAuthHeader["Timestamp"]).
+        Header("Content-Type", HmacAuthHeader["Content-Type"]).
+        ToJSON(dr).
+        Fetch(context.Background())
+    if err != nil {
+        return nil, err
+    }
+    // check if the request was successful
+    if !dr.Success {
+        return nil, fmt.Errorf(dr.Message)
+    }
+    // get the user object from the response
+    user := &models.User{}
+    user = dr.Data.(*models.User)
+    return user, nil
+}
+
+    
