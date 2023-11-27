@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  user_db:
+    env_file:
+      - .env
+    entrypoint:
+      - /surreal
+      - start
+      - --user
+      - $CST_USER_USERNAME
+      - --pass
+      - $CST_USER_PASSWORD
+    image: surrealdb/surrealdb:latest
+    ports:
+      - 44315:8000
+  data_db:
+    env_file:
+      - ./.env
+    entrypoint:
+      - /surreal
+      - start
+      - --user
+      - $CST_DATA_USERNAME
+      - --pass
+      - $CST_DATA_PASSWORD
+    image: surrealdb/surrealdb:latest
+    ports:
+      - 44325:8000
