@@ -157,4 +157,32 @@ func (u *UserService) UpdateDatePrefrence(id string, datePrefrence string) (*mod
     return user, nil
 }
 
+// CheckLoggedIn will check if a user is logged in and return a 
+// bool.
+func (u *UserService) CheckLoggedIn(authToken string) (bool, error) {
+    endpoint := u.endpoint + "/api/auth/user/check" + authToken
+    HmacAuthHeader, err := cstcommonlib.ConstructHmacAuthHeader(endpoint, "GET")
+    if err != nil {
+        return false, err
+    }
+
+    var dr cstcommonlib.DetailedResponse
+    err = requests.
+        URL(endpoint).
+        Header("Signature", HmacAuthHeader["Signature"]).
+        Header("Timestamp", HmacAuthHeader["Timestamp"]).
+        Header("Content-Type", HmacAuthHeader["Content-Type"]).
+        ToJSON(dr).
+        Fetch(context.Background())
+    if err != nil {
+        return false, err
+    }
+    // check if the request was successful
+    if !dr.Success {
+        return false, fmt.Errorf(dr.Message)
+    }
+    // get the user object from the response
+    loggedIn := dr.Data.(bool)
+    return loggedIn, nil
+}
     

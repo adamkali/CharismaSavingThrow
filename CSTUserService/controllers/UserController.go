@@ -229,3 +229,53 @@ func (c *UserController) UpdateDatePrefrence(ctx *gin.Context) {
     dr := common.NewDetailedResponse(nil)
     c.updateDatePrefrence(ctx, dr)
 }
+
+// CheckLogin handles if the user is logged in.
+// This will later use a date to see if the user 
+// has been logged in for too long. and force them to log in again.
+func (c *UserController) checkLogin(ctx *gin.Context, dr *common.BoolResponse) {
+    // get the user id from the request parameters
+    authToken := ctx.Param("authToken")
+    // get the user from the database
+    userInterface, err := c.DB.Query(
+        "SELECT * FROM User WHERE AuthToken = $authToken",
+        map[string]interface{}{
+            "authToken": authToken,
+        })
+    if err != nil {
+        dr.InternalServerError(ctx, err)
+        return
+    }
+    if userInterface == nil {
+        dr.NotFound(ctx, fmt.Errorf("User with auth token %s not found", authToken))
+        return
+    }
+    // unmarshal the ser from the database into a User object
+    user := &models.User{}
+    if err := surrealdb.Unmarshal(userInterface, user); err != nil {
+        dr.InternalServerError(ctx, err)
+        return
+    }
+    dr.OK(ctx)
+}
+
+// CheckLoginAuth handles the checking of the user login.
+// It validates the HMAC and calls the checkLogin function.
+func (c *UserController) CheckLoginAuth(ctx *gin.Context) {
+    dr := common.NewBoolResponse()
+    if err := common.ValidateHmac(ctx); err != nil {
+        dr.Unauthorized(ctx, err)
+        return
+    }
+
+    c.checkLogin(ctx, dr)
+}
+
+// CheckLogin handles the HTTP GET request to check if the user is logged in.
+// It calls the checkLogin method passing the context and a DetailedResponse object.
+//
+// WARNING: This method is only for development purposes.
+func (c *UserController) CheckLogin(ctx *gin.Context) {
+    dr := common.NewBoolResponse()
+    c.checkLogin(ctx, dr)
+}

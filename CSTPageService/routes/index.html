@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Roll For Charisma</title>
+    <link rel="stylesheet" href="/static/style/output.css">
+    <script src="/static/js/htmx.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body class="bg-gradient-to-t from-blue-600 via-slate-200 to-yellow-50
+    dark:via-slate-800:to-black w-full h-screen flex px-6 py-4">
+    <div
+        hx-get="check/" + localStorage.getItem("authToken")
+        hx-trigger="load"
+        hx-target="this"
+    >
+    </div>
+</body>

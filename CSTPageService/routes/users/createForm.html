@@ -1,0 +1,30 @@
+{{ define "users/createForm.html" }}
+<!--
+    This is a mobile first site. The site is designed to be viewed on a mobile device first and then
+    scaled up to a desktop. This is done by using the min-width media query.
+    PAGE INPUT:
+    type createUserFormPageData struct {
+        UsernameInput InputComponent
+        PasswordInput InputComponent
+        ConfirmPasswordInput InputComponent
+        EmailInput InputComponent
+        SubmitButton SubmitButtonComponent
+        BioInput InputComponent
+        DatePreferenceInput InputComponent
+        LoginButton ButtonComponent
+    }
+-->
+<form
+    class="w-full h-screen flex flex-col justify-center items-center
+    bg-slate-300 dark:bg-slate-600 rounded-lg"
+>
+    {{ template "components/input.html" .UsernameInput }}
+    {{ template "components/input.html" .PasswordInput }}
+    {{ template "components/input.html" .ConfirmPasswordInput }}
+    {{ template "components/input.html" .EmailInput }}
+    {{ template "components/input.html" .BioInput }}
+    {{ template "components/input.html" .DatePreferenceInput }}
+    {{ template "components/submitButton.html" .SubmitButton }}
+    {{ template "components/button.html" .LoginButton }}
+</form>
+{{ end }}

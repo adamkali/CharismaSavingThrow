@@ -1,6 +1,6 @@
 module github.com/adamkali/CharismaSavingThrow/PageService
 
-go 1.21.4
+go 1.20
 
 require (
 	github.com/bytedance/sonic v1.9.1 // indirect
@@ -29,3 +29,4 @@ require (
 	google.golang.org/protobuf v1.30.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+

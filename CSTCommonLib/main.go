@@ -181,17 +181,17 @@ func ConstructHmacAuthHeader(endpoint, method string) (map[string]string, error)
 	timestamp := time.Now().Unix()
 
 	// Construct the message to be signed
-	message := fmt.Sprintf("%s\n%s\n%d", method, endpoint, timestamp)
+    message := fmt.Sprintf("%s\n%s\n%d", method, endpoint, timestamp)
 
-	// Calculate the HMAC signature
-	hmacSignature := calculateHMAC(message, secretKey)
+    // Calculate the HMAC signature
+    hmacSignature := calculateHMAC(message, secretKey)
 
-	// Create the header map
-	headers := map[string]string{
-		"Signature":      hmacSignature,
-		"Timestamp":      strconv.FormatInt(timestamp, 10),
-		"Content-Type":   "application/json",
-	}
+    // Create the header map
+    headers := map[string]string{
+        "Signature":      hmacSignature,
+        "Timestamp":      strconv.FormatInt(timestamp, 10),
+        "Content-Type":   "application/json",
+    }
 
     return headers, nil
 }
@@ -200,7 +200,7 @@ func ConstructHmacAuthHeader(endpoint, method string) (map[string]string, error)
 // of a request. It checks if the received signature matches the expected
 // signature calculated using the given method, endpoint, and body.
 func ValidateHmac(ctx *gin.Context) error {
-	// Get the secret key from the environment variable
+    // Get the secret key from the environment variable
     method := ctx.Request.Method
     endpoint := ctx.Request.URL.Path
     receivedSignature := ctx.GetHeader("Signature")
@@ -210,17 +210,17 @@ func ValidateHmac(ctx *gin.Context) error {
     }
 
 
-	secretKey := os.Getenv("SECRET_KEY")
-	if secretKey == "" {
+    secretKey := os.Getenv("SECRET_KEY")
+    if secretKey == "" {
         return fmt.Errorf("SECRET_KEY environment variable not set")
-	}
+    }
 
-	// Convert the received signature to bytes
-	receivedSignatureBytes, err := base64.StdEncoding.DecodeString(receivedSignature)
-	if err != nil {
+    // Convert the received signature to bytes
+    receivedSignatureBytes, err := base64.StdEncoding.DecodeString(receivedSignature)
+    if err != nil {
         return fmt.Errorf("Error decoding received signature: %s", err)
-	}
-    
+    }
+
     // format the message to be validated with the received time
     message := fmt.Sprintf("%s\n%s\n%d", method, endpoint, receivedTime)
     hmacSignature := calculateHMAC(message, secretKey)
@@ -229,7 +229,7 @@ func ValidateHmac(ctx *gin.Context) error {
         return fmt.Errorf("Error decoding expected signature: %s", err)
     }
 
-        // Compare the received signature with the expected signature
+    // Compare the received signature with the expected signature
     if !hmac.Equal(receivedSignatureBytes, expectedSignatureBytes) {
         return fmt.Errorf("Received signature does not match expected signature")
     }
@@ -239,14 +239,14 @@ func ValidateHmac(ctx *gin.Context) error {
 
 // calculateHMAC calculates the HMAC signature for the given message and key
 func calculateHMAC(message, key string) string {
-	keyBytes := []byte(key)
-	messageBytes := []byte(message)
+    keyBytes := []byte(key)
+    messageBytes := []byte(message)
 
-	hmacInstance := hmac.New(sha256.New, keyBytes)
-	hmacInstance.Write(messageBytes)
-	signature := base64.StdEncoding.EncodeToString(hmacInstance.Sum(nil))
+    hmacInstance := hmac.New(sha256.New, keyBytes)
+    hmacInstance.Write(messageBytes)
+    signature := base64.StdEncoding.EncodeToString(hmacInstance.Sum(nil))
 
-	return signature
+    return signature
 }
 
 // CreateIDSuffix creates a suffix for the ID of a resource. it creates a

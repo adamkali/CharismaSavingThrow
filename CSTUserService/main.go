@@ -27,9 +27,9 @@ func main() {
         os.Getenv("CST_USER_NS"),
         os.Getenv("CST_USER_DB"),
     ); err != nil { panic(err) }
-    
+
     uc := controllers.NewUserController(db)
-    
+
     router := gin.Default()
     auth := router.Group("/api/auth")
     {
@@ -39,6 +39,7 @@ func main() {
             user.GET("/:id", uc.GetAuth)
             user.PUT("/:id/:datePreference", uc.UpdateDatePrefrenceAuth)
             user.POST("/login", uc.LoginAuth)
+            user.GET("/check/:authToken", uc.CheckLoginAuth)
         }
     }
     if os.Getenv("CST_USER_DEV") == "true" {
@@ -50,6 +51,7 @@ func main() {
                 user.GET("/:id", uc.Get)
                 user.PUT("/:id/:datePrefrence", uc.UpdateDatePrefrence)
                 user.POST("/login", uc.Login)
+                user.GET("/check/:authToken", uc.CheckLogin)
             }
         }
     }
