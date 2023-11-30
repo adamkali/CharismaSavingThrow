@@ -1,33 +1,33 @@
 package controller
 
 type InputComponent struct {
+    Label string
+    Disabled bool
+    Value string
     Name string
     Type string
-    Placeholder string
-    Value string
-    Disabled bool
 }
 
 type ButtonComponent struct {
-    Name string
-    HtmxMethod string
-    HtmxEndpoint string
-    HtmxTarget string
+    Endpoint string 
+    Target string
+    Action string
     Text string
-    Icon string
+    SvgName string
+    Method string
 }
 
 type IconButtonComponent struct {
-    Name string
-    HtmxMethod string
-    HtmxEndpoint string
-    HtmxTarget string
+    Endpoint string 
+    Target string
+    Action string
     Text string
-    Icon string
+    SvgName string
+    Method string
 }
 
-type SubmitButtonComponent struct {
-    Name string
+type SubmitButtonComponent struct { 
     Text string
-    Icon string
+    SvgName string
+    
 }

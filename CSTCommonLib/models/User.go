@@ -10,16 +10,16 @@ import (
 
 type User struct {
 	BaseModel      surrealdb.Basemodel `table:"users" json:"-"` // does not need to be serialized
-	Id             string              `json:"id"`
-	Username       string              `json:"username"`
-	AuthHash       string              `json:"auth_hash"`
-	Email          string              `json:"email"`
-	DatePrefrence  int                 `json:"date_prefrence"`
-	Bio            string              `json:"bio"`
-	Avatar         string              `json:"avatar"`
-	CreatedAt      string              `json:"created_at"`
-	Premium        bool                `json:"premium"`
-	PremiumExpires string              `json:"premium_expires"`
+	Id             string              `json:"id" form:"id"`
+	Username       string              `json:"username" form:"username"`
+	AuthHash       string              `json:"auth_hash" form:"auth_hash"`
+	Email          string              `json:"email" form:"email"`
+	DatePrefrence  int                 `json:"date_prefrence" form:"date_prefrence"`
+	Bio            string              `json:"bio" form:"bio"`
+	Avatar         string              `json:"avatar" form:"avatar"`
+	CreatedAt      string              `json:"created_at" form:"created_at"`
+	Premium        bool                `json:"premium" form:"premium"`
+	PremiumExpires string              `json:"premium_expires" form:"premium_expires"`
 }
 
 func (u *User) GetTableName() string {
@@ -41,11 +41,11 @@ func (u *User) ValidateHash(password string) bool {
 }
 
 type UserRequest struct {
-	Username      string `json:"username"`
-	Password      string `json:"password"`
-	Email         string `json:"email"`
-	Bio           string `json:"bio"`
-	DatePrefrence int    `json:"date_prefrence"`
+	Username      string `json:"username" form:"username"`
+	Password      string `json:"password" form:"password"`
+	Email         string `json:"email" form:"email"`
+	Bio           string `json:"bio" form:"bio"`
+	DatePrefrence int    `json:"date_prefrence" form:"date_prefrence"`
 }
 
 func (u *UserRequest) ToUser() *User {
