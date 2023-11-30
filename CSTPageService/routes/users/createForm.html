@@ -23,8 +23,10 @@
     {{ template "components/input.html" .ConfirmPasswordInput }}
     {{ template "components/input.html" .EmailInput }}
     {{ template "components/input.html" .BioInput }}
-    {{ template "components/input.html" .DatePreferenceInput }}
+    <div
+        hx-get="/datePreference"
     {{ template "components/submitButton.html" .SubmitButton }}
     {{ template "components/button.html" .LoginButton }}
+
 </form>
 {{ end }}

@@ -14,11 +14,12 @@ func Create(ctx *gin.Context) {
     if err := ctx.Bind(userRequest); err != nil {
         return
     }
-    //user, err := userService.NewUserService().Create(userRequest)
-    //if err != nil {
-    //    return
-    //}
-    
+    user, err := userService.NewUserService().Create(userRequest)
+    if err != nil {
+        return
+    }
+    ctx.JSON(http.StatusOK, user)
+
 }
 
 type createUserFormPageData struct {
@@ -28,7 +29,6 @@ type createUserFormPageData struct {
     EmailInput InputComponent
     SubmitButton SubmitButtonComponent
     BioInput InputComponent
-    DatePreferenceInput InputComponent
     LoginButton ButtonComponent
 }
 
@@ -80,13 +80,6 @@ func CheckLoggedIn(ctx *gin.Context) {
                 Type: "text",
                 Value: "",
                 Placeholder: "Bio",
-            },
-            DatePreferenceInput: InputComponent{
-                Name: "datePreference",
-                Type: "number",
-                Value: "1",
-                Placeholder: "Date Preference",
-                Disabled: true,
             },
         }
         ctx.HTML(http.StatusOK, "user/createForm", createUserFormPage)
