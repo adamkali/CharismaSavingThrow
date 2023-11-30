@@ -1,19 +1,7 @@
-{{ define "components/button.html" }}
-<!--
-type ButtonData struct {
-    Endpoint string 
-    Target string
-    Action string
-    Text string
-    SvgName string
-    Method string
-}
--->
+{{ define "components/submit-button.html" }}
 <button
-    class="relative w-1/6 h-20 group"
-    hx-{{ .Method }}="{{ .Endpoint }}"
-    hx-target="{{ .Target }}"
-    hx-trigger="{{ .Action }}"
+    class="relative w-1/2 h-20 group"
+    type="submit"
 >
     <div
         class="absolute w-full h-full bg-gradient-to-tr from-sky-400
@@ -29,13 +17,11 @@ type ButtonData struct {
         group-hover:duration-200"
     >
         <img
-            src="{{ .SvgName }}"
+        src="{{ .SvgName }}"
             class="w-10 h-10 text-teal-400 ml-2"
         >
         <span class="mx-3">&nbsp;</span>
-        <span class="text-xl font-bold">
-            {{ .Text }}
-        </span>
+        <span class="text-xl font-bold">{{ .Text }}</span>
     </div>
 </button>
 {{ end }}

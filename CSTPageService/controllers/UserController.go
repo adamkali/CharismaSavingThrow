@@ -9,6 +9,16 @@ import (
 )
 
 
+func UserPage(ctx *gin.Context) {
+    userId := ctx.Param("userId")
+    user, err := userService.NewUserService().Get(userId)
+    if err != nil {
+        // TODO: handle error
+        return
+    }
+    ctx.HTML(http.StatusOK, "user/index.html", user)
+}
+
 func Create(ctx *gin.Context) {
     userRequest := &models.UserRequest{}
     if err := ctx.Bind(userRequest); err != nil {
@@ -16,10 +26,11 @@ func Create(ctx *gin.Context) {
     }
     user, err := userService.NewUserService().Create(userRequest)
     if err != nil {
+        // TODO: handle error
         return
     }
-    ctx.JSON(http.StatusOK, user)
-
+    // redirect to the user page with the user's id
+    ctx.Redirect(http.StatusFound, "/user/" + user.Id)
 }
 
 type createUserFormPageData struct {
@@ -44,42 +55,42 @@ func CheckLoggedIn(ctx *gin.Context) {
         createUserFormPage := &createUserFormPageData{
             UsernameInput: InputComponent{
                 Name: "username",
+                Label: "Username",
                 Type: "text",
                 Value: "",
-                Placeholder: "Username",
                 Disabled: false,
             },
             PasswordInput: InputComponent{
+                Label: "Password",
                 Name: "password",
                 Type: "password",
                 Value: "",
-                Placeholder: "Password",
                 Disabled: false,
             },
             ConfirmPasswordInput: InputComponent{
+                Label: "Confirm Password",
                 Name: "confirmPassword",
                 Type: "password",
                 Value: "",
-                Placeholder: "Confirm Password",
                 Disabled: false,
             },
             EmailInput: InputComponent{
+                Label: "Email",
                 Name: "email",
                 Type: "email",
                 Value: "",
-                Placeholder: "Email",
                 Disabled: false,
             },
             SubmitButton: SubmitButtonComponent{
-                Name: "submit",
-                Text: "Create Account",
-                Icon: "static/imgs/.svg",
+                Text: "Create User",
+                SvgName: "user",
             },
             BioInput: InputComponent{
                 Name: "bio",
                 Type: "text",
                 Value: "",
-                Placeholder: "Bio",
+                Disabled: false,
+                Label: "Bio",
             },
         }
         ctx.HTML(http.StatusOK, "user/createForm", createUserFormPage)
