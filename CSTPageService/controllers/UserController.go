@@ -1,13 +1,20 @@
 package controller
 
 import (
-	"net/http"
+    "net/http"
 
-	models "github.com/adamkali/CharismaSavingThrow/CSTCommonLib/models"
-	userService "github.com/adamkali/CharismaSavingThrow/CSTCommonLib/services"
-	"github.com/gin-gonic/gin"
+    models "github.com/adamkali/CharismaSavingThrow/CSTCommonLib/models"
+    userService "github.com/adamkali/CharismaSavingThrow/CSTCommonLib/services"
+    "github.com/gin-gonic/gin"
 )
 
+type userIndexPageData struct {
+    Username string
+    Bio string
+    DatePreference string
+    Avatar string
+    // TODO: EditButton ButtonComponent 
+}
 
 func UserPage(ctx *gin.Context) {
     userId := ctx.Param("userId")
@@ -16,7 +23,17 @@ func UserPage(ctx *gin.Context) {
         // TODO: handle error
         return
     }
-    ctx.HTML(http.StatusOK, "user/index.html", user)
+    userDatPreference, err := userService.
+    NewDatePreferenceService().
+    GetByNumber(user.DatePrefrence)
+
+    userIndexPageData := &userIndexPageData{
+        Username: user.Username,
+        Bio: user.Bio,
+        DatePreference: userDatPreference.Title,
+        Avatar: "/static/imgs/progile.svg",
+    }
+    ctx.HTML(http.StatusOK, "user/index.html", userIndexPageData)
 }
 
 func Create(ctx *gin.Context) {
@@ -48,6 +65,11 @@ func CheckLoggedIn(ctx *gin.Context) {
     authToken := ctx.Param("authToken")
     loggedIn, err := userService.NewUserService().CheckLoggedIn(authToken)
     if err != nil {
+        println(err.Error())
+        ctx.JSON(http.StatusInternalServerError, gin.H{
+            "success": false,
+            "message": "Internal Server Error: " + err.Error(),
+        })
         return
     }
     if !loggedIn {
@@ -94,7 +116,24 @@ func CheckLoggedIn(ctx *gin.Context) {
             },
         }
         ctx.HTML(http.StatusOK, "user/createForm", createUserFormPage)
+    } else {
+        // send the user page
+        ctx.JSON(http.StatusOK, gin.H{
+            "success": true,
+            "message": "User is logged in",
+        })
     }
-    // send the user page
-    ctx.HTML(http.StatusOK, "user/userPage", nil)
 }
+
+func UpdateDatePrefrence(ctx *gin.Context) {
+    userId := ctx.Param("userId")
+    datePrefrence := ctx.Param("datePrefrence")
+    user, err := userService.NewUserService().UpdateDatePrefrence(userId, datePrefrence)
+    if err != nil {
+        // todo: handle error
+        return
+    }
+    // redirect to the user page with the user's id
+    ctx.Redirect(http.StatusFound, "/user/" + user.Id)
+}
+

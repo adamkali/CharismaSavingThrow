@@ -1,0 +1,44 @@
+{{ define "datePreferences/date-preference-selector.html" }}
+<!--
+    PAGE INPUT:
+    type DatePreference struct {
+        BaseModel surrealdb.Basemodel `table:"users" json:"-"` // does not need to be serialized
+        Id        string              `json:"id"`
+        Number    int                 `json:"number"`
+        Title     string              `json:"title"`
+    }
+    type datePreferenceSelectorData struct {
+        DatePreferences []DatePreference
+    }
+-->
+<div class="group flex flex-col items-center justify-center">
+    <div
+        class="absolute w-full h-full bg-gradient-to-tr from-sky-400
+        to-blue-600 rounded-lg blur opacity-75
+        group-hover:scale-110 group-hover:duration-200
+        group-hover:from-blue-600 group-hover:to-sky-400
+        ease-in-out transition-all"
+    ></div>
+    <select
+        class="relative px-8 py-4 bg-slate-300 dark:bg-slate-600 rounded-lg
+        leading-none flex items-center justify-evenly
+        group-hover:text-sky-100 group-hover-scale-105
+        group-hover:duration-200"
+        name="date_preference"
+    >
+        <option
+            class="text-xl font-bold bg-slate-300 dark:bg-slate-600 rounded-lg"
+            value=""
+        >
+            Select Dating Preference
+        </option>
+        {{ range .DatePreferences }}
+            <option
+                class="text-xl font-bold bg-slate-300 dark:bg-slate-600 rounded-lg"
+                value="{{ .Number }}"
+            >
+                {{ .Title }}
+            </option>
+        {{ end }}
+    </select>
+</div>

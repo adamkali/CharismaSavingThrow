@@ -1,0 +1,1 @@
+function logout() { localStorage.removeItem("authToken"); window.location.href = "/"; } document.addEventListener("DOMContentLoaded", function () { document.getElementById("logout-button").addEventListener("click", logout); });

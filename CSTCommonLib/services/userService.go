@@ -64,6 +64,7 @@ func (u *UserService) Create(userRequest *models.UserRequest) (*models.User, err
 func (u *UserService) Get(id string) (*models.User, error) {
     endpoint := u.endpoint + "/api/auth/user/" + id
     HmacAuthHeader, err := cstcommonlib.ConstructHmacAuthHeader(endpoint, "GET")
+    println(HmacAuthHeader["Signature"])
     if err != nil {
         return nil, err
     }

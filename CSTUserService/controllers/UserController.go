@@ -263,6 +263,7 @@ func (c *UserController) checkLogin(ctx *gin.Context, dr *common.BoolResponse) {
 // It validates the HMAC and calls the checkLogin function.
 func (c *UserController) CheckLoginAuth(ctx *gin.Context) {
     dr := common.NewBoolResponse()
+    println("CheckLoginAuth")
     if err := common.ValidateHmac(ctx); err != nil {
         dr.Unauthorized(ctx, err)
         return
@@ -278,4 +279,55 @@ func (c *UserController) CheckLoginAuth(ctx *gin.Context) {
 func (c *UserController) CheckLogin(ctx *gin.Context) {
     dr := common.NewBoolResponse()
     c.checkLogin(ctx, dr)
+}
+
+// update handles the updating of a user.
+// It gets the user id from the request parameters,
+// gets the user from the database, and unmarshals it into a User object.
+func (c *UserController) update(ctx *gin.Context, dr *common.DetailedResponse) {
+    id := ctx.Param("id")
+    user := &models.User{}
+    if err := ctx.BindJSON(user); err != nil {
+        dr.BadRequest(ctx, err)
+        return
+    }
+    userInterface, err := c.DB.Select(id)
+    if err != nil {
+        dr.InternalServerError(ctx, err)
+        return
+    }
+    if userInterface == nil {
+        dr.NotFound(ctx, fmt.Errorf("User with id %s not found", id))
+        return
+    }
+
+    // do not care what is the old data in the database
+    // just update the user with the new data
+    if _, err := c.DB.Update(user.Id, user); err != nil {
+        dr.InternalServerError(ctx, err)
+        return
+    }
+    dr.Data = user
+    dr.OK(ctx)
+}
+
+// Update handles the HTTP PUT request to update a user.
+// It calls the update method passing the context and a DetailedResponse object.
+//
+// WARNING: This method is only for development purposes.
+func (c *UserController) Update(ctx *gin.Context) {
+    dr := common.NewDetailedResponse(nil)
+    c.update(ctx, dr)
+}
+
+// UpdateAuth handles the updating of a user.
+// It validates the HMAC and calls the update function.
+func (c *UserController) UpdateAuth(ctx *gin.Context) {
+    dr := common.NewDetailedResponse(nil)
+    if err := common.ValidateHmac(ctx); err != nil {
+        dr.Unauthorized(ctx, err)
+        return
+    }
+
+    c.update(ctx, dr)
 }

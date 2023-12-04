@@ -27,6 +27,12 @@ func main() {
         os.Getenv("CST_DATA_DB"),
     ); err != nil { panic(err) }
 
+    var query string
+    bs, err := os.ReadFile("./import.surql")
+    if err != nil { panic(err) }
+    query = string(bs)
+    if _, err := db.Query(query, nil); err != nil { panic(err) }
+
     router := gin.Default()
     dpc := controllers.NewDatePreferenceController(db, router)
     auth := router.Group("/auth")

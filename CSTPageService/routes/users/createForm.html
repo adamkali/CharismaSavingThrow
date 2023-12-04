@@ -16,7 +16,7 @@
 -->
 <form
     class="w-full h-screen flex flex-col justify-center items-center
-    bg-slate-300 dark:bg-slate-600 rounded-lg"
+    bg-slate-400 dark:bg-slate-600 rounded-lg"
 >
     {{ template "components/input.html" .UsernameInput }}
     {{ template "components/input.html" .PasswordInput }}
@@ -24,7 +24,11 @@
     {{ template "components/input.html" .EmailInput }}
     {{ template "components/input.html" .BioInput }}
     <div
-        hx-get="/datePreference"
+        hx-get="/datePreference/selector"
+        hx-target="this"
+        hx-trigger="load"
+        class="relative w-1/6 h-20 group"
+    ></div>
     {{ template "components/submitButton.html" .SubmitButton }}
     {{ template "components/button.html" .LoginButton }}
 

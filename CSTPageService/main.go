@@ -20,7 +20,10 @@ func main() {
         user.GET("/check", controller.CheckLoggedIn)
         user.POST("/create", controller.Create)
     }
-
-    
+    datePreference := router.Group("/datePreference")
+    {
+        datePreference.GET("/selector", controller.DatePreferenceSelector)
+    }
+    router.Run(":8080")
     
 }

@@ -182,6 +182,7 @@ func ConstructHmacAuthHeader(endpoint, method string) (map[string]string, error)
 
 	// Construct the message to be signed
     message := fmt.Sprintf("%s\n%s\n%d", method, endpoint, timestamp)
+    println(message)
 
     // Calculate the HMAC signature
     hmacSignature := calculateHMAC(message, secretKey)
@@ -204,6 +205,7 @@ func ValidateHmac(ctx *gin.Context) error {
     method := ctx.Request.Method
     endpoint := ctx.Request.URL.Path
     receivedSignature := ctx.GetHeader("Signature")
+    println(receivedSignature)
     receivedTime, err := strconv.ParseInt(ctx.GetHeader("Timestamp"), 10, 64)
     if err != nil {
         return fmt.Errorf("Error parsing timestamp: %s", err)

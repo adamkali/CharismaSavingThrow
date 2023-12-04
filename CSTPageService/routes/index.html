@@ -5,34 +5,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roll For Charisma</title>
-    <link rel="stylesheet" href="/static/style/output.css">
+    <link rel="stylesheet" href="/static/styles/output.css">
     <script src="/static/js/htmx.min.js"></script>
 </head>
 <body class="bg-gradient-to-t from-blue-600 via-slate-300 to-slate-50 dark:via-slate-800 dark:to-black w-full h-screen flex px-6 py-4">
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             var authToken = localStorage.getItem("authToken");
+            console.log("Loaded page");
 
-            if (authToken) {
-                // Use htmx to make an AJAX request
-                htmx.ajax({
-                    url: "/user/check/" + authToken,
-                    target: "#content",  // The ID of the element to update with the response
-                    method: "get",
-                    headers: {
-                        "Content-Type": "application/json",
-                        // Add any other headers if needed
-                    },
-                    onLoad: function (xhr) {
-                        // You can perform additional actions after the request is complete
-                        console.log("Request completed:", xhr.responseText);
-                    },
-                    onError: function (xhr) {
-                        // Handle errors here
-                        console.error("Error:", xhr.responseText);
-                    }
-                });
-            }
+            htmx.ajax({
+                url: "/user/check/" + authToken ?? "",
+                target: "this",  // The ID of the element to update with the response
+                method: "get",
+                headers: {
+                    "Content-Type": "application/json",
+                    // Add any other headers if needed
+                },
+                onLoad: function (xhr) {
+                    // You can perform additional actions after the request is complete
+                    console.log("Request completed:", xhr.responseText);
+                },
+                onError: function (xhr) {
+                    // Handle errors here
+                    console.error("Error:", xhr.responseText);
+                }
+            });
         });
     </script>
 </body>
